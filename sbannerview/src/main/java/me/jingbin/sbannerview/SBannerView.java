@@ -274,7 +274,6 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
                 break;
             case BannerConfig.CIRCLE_INDICATOR_TITLE:
                 indicator.setVisibility(visibility);
-//                setTitleStyleUI();
                 break;
         }
     }
@@ -438,12 +437,7 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
             } else if (mDatas.size() < 1) {
                 return 0;
             } else {
-                if (isLoop) {
-                    // todo 不循环播放
-                    return mDatas.size();
-                } else {
-                    return mDatas.size();
-                }
+                return mDatas.size();
             }
         }
 
@@ -487,27 +481,6 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
     public void onPageScrollStateChanged(int state) {
         if (mOnPageChangeListener != null) {
             mOnPageChangeListener.onPageScrollStateChanged(state);
-        }
-        if (!isLoop) {
-            return;
-        }
-        switch (state) {
-            case 0://No operation
-                /*if (currentItem == 0) {
-                    viewPager.setCurrentItem(count, false);
-                } else if (currentItem == count + 1) {
-                    viewPager.setCurrentItem(1, false);
-                }*/
-                /*if (currentItem == 0) {
-                    viewPager.setCurrentItem(NUM - 1, false);
-                } else if (currentItem == NUM - 1) {
-                    viewPager.setCurrentItem(0, false);
-                }*/
-                break;
-            case 1://start Sliding
-                break;
-            case 2://end Sliding
-                break;
         }
     }
 
@@ -559,9 +532,8 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
 
     }
 
-    public SBannerView setOnBannerClickListener(OnBannerClickListener listener) {
+    public void setOnBannerClickListener(OnBannerClickListener listener) {
         this.listener = listener;
-        return this;
     }
 
     public void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {

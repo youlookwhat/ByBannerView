@@ -1,62 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:elevation="4dp">
+    android:layout_height="match_parent">
 
-    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:background="@android:color/white"
-        android:orientation="vertical">
+        android:elevation="4dp">
 
-        <ImageView
-            android:id="@+id/iv_banner"
+        <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:gravity="center"
-            android:scaleType="centerCrop"
-            android:src="@drawable/image"
-            tools:background="@color/colorAccent" />
-
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/iv_banner"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="16dp"
-            android:text="药妆店必BUY扫货指南 三款美白身体乳 免费申请"
-            android:textColor="#ff4a4a4a"
-            android:textSize="14sp" />
+            android:background="@android:color/white"
+            android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/ll_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="16dp"
-            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/iv_banner"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:gravity="center"
+                android:scaleType="centerCrop"
+                android:src="@drawable/image"
+                tools:background="@color/colorAccent" />
 
             <TextView
-                android:layout_width="52dp"
-                android:layout_height="16dp"
-                android:text="剩余时间"
-                android:textColor="#ff7f7f7f"
-                android:textSize="12sp" />
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_banner"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="16dp"
+                android:text="药妆店必BUY扫货指南 三款美白身体乳 免费申请"
+                android:textColor="#ff4a4a4a"
+                android:textSize="14sp" />
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="horizontal">
 
-        <android.support.v7.widget.AppCompatButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ll_time"
-            android:layout_alignParentRight="true"
-            android:layout_marginEnd="16dp"
-            android:text="立即申请" />
-    </RelativeLayout>
-</android.support.v7.widget.CardView>
+                <TextView
+                    android:layout_width="52dp"
+                    android:layout_height="16dp"
+                    android:text="剩余时间"
+                    android:textColor="#ff7f7f7f"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.AppCompatButton
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_time"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:text="立即申请" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</FrameLayout>

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.jingbin.sbannerview.config.BannerConfig;
 import me.jingbin.sbannerview.config.OnBannerClickListener;
 import me.jingbin.sbannerview.config.ScaleRightTransformer;
 import me.jingbin.sbannerview.holder.BannerViewHolder;
@@ -30,14 +31,11 @@ public class MainActivity extends AppCompatActivity {
         final SBannerView banner = findViewById(R.id.banner);
 
         final List<String> list = new ArrayList<>();
-        list.add("地方撒发生0");
-        list.add("地方撒发生1");
-        list.add("地方撒发生2");
-        list.add("地方撒发生3");
-        list.add("地方撒发生4");
-        list.add("地方撒发生5");
+        for (int i = 0; i < 5; i++) {
+            list.add("药妆店必BUY扫货指南-" + i);
+        }
         banner.setAutoPlay(true)
-//                .setBannerAnimation(Transformer.ScaleRight)
+                .setBannerStyle(BannerConfig.NOT_INDICATOR)
                 .setBannerAnimation(ScaleRightTransformer.class)
                 .setOffscreenPageLimit(list.size())
                 .setDelayTime(3000)
@@ -47,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
                         return new CustomViewHolder();
                     }
                 })
-//                .setBannerStyle(BannerConfig.RIGHT)
                 .start();
         banner.setOnBannerClickListener(new OnBannerClickListener() {
             @Override
@@ -63,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-
+                Toast.makeText(getApplicationContext(), "position:" + position, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -90,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         public void onBind(Context context, int position, String data) {
             // 数据绑定
 //            mCardView.setCardBackgroundColor(Color.parseColor(data));
-            mTextView.setText(position + ":" + data);
+            mTextView.setText(position + "：" + data);
         }
     }
 }

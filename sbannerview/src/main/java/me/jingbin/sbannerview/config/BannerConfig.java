@@ -5,6 +5,7 @@ public class BannerConfig {
     /**
      * indicator style
      */
+    public static final int NOT_INDICATOR = 0;
     public static final int CIRCLE_INDICATOR = 1;
     public static final int CIRCLE_INDICATOR_TITLE = 4;
     public static final int CIRCLE_INDICATOR_TITLE_INSIDE = 5;

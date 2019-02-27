@@ -8,9 +8,12 @@
 
     <me.jingbin.sbannerview.SBannerView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/banner"
-        android:background="@color/colorAccent"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="370dp"
+        app:indicator_height="6dp"
+        app:indicator_margin="15dp"
+        app:indicator_padding="6dp"
+        app:indicator_width="6dp"
         app:page_right_margin="59dp" />
 
 </FrameLayout>

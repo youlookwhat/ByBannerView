@@ -25,18 +25,20 @@ import me.jingbin.sbannerview.holder.HolderCreator;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private SBannerView banner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final SBannerView banner = findViewById(R.id.banner);
+        banner = findViewById(R.id.banner);
 
         final List<String> list = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             list.add("药妆店必BUY扫货指南-" + i);
         }
         banner.setAutoPlay(true)
-                .setBannerStyle(BannerConfig.NOT_INDICATOR)
+//                .setBannerStyle(BannerConfig.NOT_INDICATOR)
                 .setBannerAnimation(ScaleRightTransformer.class)
                 .setOffscreenPageLimit(list.size())
                 .setDelayTime(3000)
@@ -91,4 +93,19 @@ public class MainActivity extends AppCompatActivity {
             mTextView.setText(position + "：" + data);
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //开始轮播
+        banner.startAutoPlay();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //结束轮播
+        banner.stopAutoPlay();
+    }
+
 }

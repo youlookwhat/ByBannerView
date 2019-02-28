@@ -1,24 +1,23 @@
 package me.jingbin.sbannerview;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
-import me.jingbin.sbannerview.config.BannerConfig;
-import me.jingbin.sbannerview.config.OnBannerClickListener;
-import me.jingbin.sbannerview.config.ScaleRightTransformer;
-import me.jingbin.sbannerview.holder.BannerViewHolder;
-import me.jingbin.sbannerview.holder.HolderCreator;
+import me.jingbin.sbanner.SBannerView;
+import me.jingbin.sbanner.config.OnBannerClickListener;
+import me.jingbin.sbanner.config.ScaleRightTransformer;
+import me.jingbin.sbanner.holder.BannerViewHolder;
+import me.jingbin.sbanner.holder.HolderCreator;
 
 /**
  * @author jingbin
@@ -37,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 5; i++) {
             list.add("药妆店必BUY扫货指南-" + i);
         }
-        banner.setAutoPlay(true)
+        banner
+//                .setAutoPlay(true)
 //                .setBannerStyle(BannerConfig.NOT_INDICATOR)
                 .setBannerAnimation(ScaleRightTransformer.class)
                 .setOffscreenPageLimit(list.size())

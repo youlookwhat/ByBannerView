@@ -64,7 +64,7 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
     private List<ImageView> indicatorImages;
     private Context context;
     private BannerViewPager viewPager;
-
+    private int widthPixels;
     // 指示器
     private LinearLayout indicator;
 
@@ -89,6 +89,7 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
         mDatas = new ArrayList<>();
         indicatorImages = new ArrayList<>();
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        widthPixels = dm.widthPixels;
         indicatorSize = dm.widthPixels / 80;
         initView(context, attrs);
     }
@@ -266,17 +267,13 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
             case BannerConfig.CUSTOM_INDICATOR:
                 indicator.setVisibility(visibility);
                 break;
-            case BannerConfig.CIRCLE_INDICATOR_TITLE:
-                indicator.setVisibility(visibility);
+            default:
                 break;
         }
     }
 
     private void setImageList() {
-        if (bannerStyle == BannerConfig.CIRCLE_INDICATOR ||
-                bannerStyle == BannerConfig.CIRCLE_INDICATOR_TITLE ||
-                bannerStyle == BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE ||
-                bannerStyle == BannerConfig.CUSTOM_INDICATOR) {
+        if (bannerStyle == BannerConfig.CIRCLE_INDICATOR || bannerStyle == BannerConfig.CUSTOM_INDICATOR) {
             createIndicator();
         }
     }
@@ -308,8 +305,7 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
                 }
             }
             indicatorImages.add(imageView);
-            if (bannerStyle == BannerConfig.CIRCLE_INDICATOR ||
-                    bannerStyle == BannerConfig.CIRCLE_INDICATOR_TITLE) {
+            if (bannerStyle == BannerConfig.CIRCLE_INDICATOR) {
                 indicator.addView(imageView, params);
             } else if (bannerStyle == BannerConfig.CUSTOM_INDICATOR) {
                 indicator.addView(imageView, customParams);
@@ -373,7 +369,6 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
                         pagerCurrentItem = adapter.getCount() - 1;
                     }
 
-
                     // 2+1
                     currentItem = pagerCurrentItem + 1;
                     if (currentItem == adapter.getCount()) {
@@ -393,11 +388,11 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
                 if (isLoop) {
                     // 最后一个 向前滑
                     if (currentItem == adapter.getCount()) {
-                        Log.e("currentItem1", currentItem + "");
+//                        Log.e("currentItem1", currentItem + "");
                         viewPager.setCurrentItem(currentItem);
                         handler.post(task);
                     } else {
-                        Log.e("currentItem2", currentItem + "");
+//                        Log.e("currentItem2", currentItem + "");
                         viewPager.setCurrentItem(currentItem);
                         handler.postDelayed(task, delayTime);
                     }
@@ -415,6 +410,9 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (!isAutoPlay) {
+            return super.dispatchTouchEvent(ev);
+        }
         switch (ev.getAction()) {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
@@ -422,7 +420,12 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
                 startAutoPlay();
                 break;
             case MotionEvent.ACTION_DOWN:
-                stopAutoPlay();
+                // 按下时 x坐标位置
+                float touchX = ev.getRawX();
+                // 去除两边间隔的区域
+                if (touchX >= mPageLeftMargin && touchX < widthPixels - mPageRightMargin) {
+                    stopAutoPlay();
+                }
                 break;
             default:
                 break;
@@ -500,8 +503,6 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
             mOnPageChangeListener.onPageSelected(position);
         }
         if (bannerStyle == BannerConfig.CIRCLE_INDICATOR ||
-                bannerStyle == BannerConfig.CIRCLE_INDICATOR_TITLE ||
-                bannerStyle == BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE ||
                 bannerStyle == BannerConfig.CUSTOM_INDICATOR) {
             if (isLoop) {
                 if (mIndicatorSelectedDrawable != null && mIndicatorUnselectedDrawable != null) {
@@ -524,16 +525,6 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
             }
             lastPosition = position;
         }
-
-//        switch (bannerStyle) {
-//            case BannerConfig.CIRCLE_INDICATOR:
-//                break;
-//            case BannerConfig.CUSTOM_INDICATOR:
-//                break;
-//            default:
-//                break;
-//        }
-
     }
 
     public void setOnBannerClickListener(OnBannerClickListener listener) {

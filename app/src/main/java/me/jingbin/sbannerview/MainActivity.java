@@ -25,12 +25,14 @@ import me.jingbin.sbanner.holder.HolderCreator;
 public class MainActivity extends AppCompatActivity {
 
     private SBannerView banner;
+    private SBannerView banner2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         banner = findViewById(R.id.banner);
+        banner2 = findViewById(R.id.banner2);
 
         final List<String> list = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
@@ -71,6 +73,21 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        banner2
+//                .setAutoPlay(true)
+//                .setBannerStyle(BannerConfig.NOT_INDICATOR)
+                .setBannerAnimation(ScaleRightTransformer.class)
+                .setOffscreenPageLimit(list.size())
+                .setDelayTime(3000)
+                .setPages(list, new HolderCreator<BannerViewHolder>() {
+                    @Override
+                    public BannerViewHolder createViewHolder() {
+                        return new CustomViewHolder2();
+                    }
+                })
+                .start();
+
     }
 
     class CustomViewHolder implements BannerViewHolder<String> {
@@ -94,11 +111,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    class CustomViewHolder2 implements BannerViewHolder<String> {
+
+        @Override
+        public View createView(Context context) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_banner_two, null);
+            return view;
+        }
+
+        @Override
+        public void onBind(Context context, int position, String data) {
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
         //开始轮播
         banner.startAutoPlay();
+        banner2.startAutoPlay();
     }
 
     @Override
@@ -106,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         //结束轮播
         banner.stopAutoPlay();
+        banner2.stopAutoPlay();
     }
 
 }

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:drawable/bottom_bar"
+    android:background="@android:color/darker_gray"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <me.jingbin.sbanner.SBannerView xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -17,4 +18,15 @@
         app:indicator_width="6dp"
         app:page_right_margin="59dp" />
 
-</FrameLayout>
+    <me.jingbin.sbanner.SBannerView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/banner2"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:indicator_height="6dp"
+        app:indicator_margin="15dp"
+        app:indicator_padding="6dp"
+        app:indicator_width="6dp"
+        app:page_left_margin="30dp"
+        app:page_right_margin="30dp" />
+
+</LinearLayout>

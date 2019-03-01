@@ -37,6 +37,7 @@ import static android.support.v4.view.ViewPager.PageTransformer;
 
 /**
  * @author jingbin
+ * link: https://github.com/youlookwhat/SBannerView
  */
 public class SBannerView extends FrameLayout implements OnPageChangeListener {
 

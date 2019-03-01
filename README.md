@@ -20,6 +20,6 @@ Step 2. Add the dependency
 
 ```java
 dependencies {
-         compile 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
+	com.github.youlookwhat:SBannerView:1.0.5
 }
 ```

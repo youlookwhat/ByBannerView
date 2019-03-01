@@ -3,12 +3,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.github.dcendents.android-maven'
 // Your Group
 group='com.github.youlookwhat'
+
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
     defaultConfig {
         applicationId "me.jingbin.sbannerview"
-        minSdkVersion 17
-        targetSdkVersion 26
+        minSdkVersion 14
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         multiDexEnabled true //Add this
@@ -24,11 +25,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(':sbanner')
-    implementation 'com.android.support:cardview-v7:26.1.0'
 }

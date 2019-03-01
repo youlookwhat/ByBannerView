@@ -1,8 +1,4 @@
 apply plugin: 'com.android.application'
-// JitPack Maven
-apply plugin: 'com.github.dcendents.android-maven'
-// Your Group
-group='com.github.youlookwhat'
 
 android {
     compileSdkVersion 28

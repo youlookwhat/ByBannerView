@@ -20,6 +20,6 @@ Step 2. Add the dependency
 
 ```java
 dependencies {
-	com.github.youlookwhat:SBannerView:1.0.5
+	com.github.youlookwhat:SBannerView:1.0.6
 }
 ```

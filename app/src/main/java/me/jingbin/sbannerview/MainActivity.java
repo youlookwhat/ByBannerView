@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
             list.add("药妆店必BUY扫货指南-" + i);
         }
         banner
+                .setPageRightMargin(dip2px(this, 59))
 //                .setAutoPlay(true)
 //                .setBannerStyle(BannerConfig.NOT_INDICATOR)
                 .setBannerAnimation(ScaleRightTransformer.class)
@@ -92,13 +93,11 @@ public class MainActivity extends AppCompatActivity {
 
     class CustomViewHolder implements BannerViewHolder<String> {
 
-        //        private CardView mCardView;
         private TextView mTextView;
 
         @Override
         public View createView(Context context) {
             View view = LayoutInflater.from(context).inflate(R.layout.banner_item, null);
-//            mCardView = (CardView) view.findViewById(R.id.group);
             mTextView = (TextView) view.findViewById(R.id.text);
             return view;
         }
@@ -106,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBind(Context context, int position, String data) {
             // 数据绑定
-//            mCardView.setCardBackgroundColor(Color.parseColor(data));
             mTextView.setText(position + "：" + data);
         }
     }
@@ -122,6 +120,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBind(Context context, int position, String data) {
         }
+    }
+
+    /**
+     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+     * xml文件里的dp --->  手机像素里的px
+     */
+    public static int dip2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
     }
 
     @Override

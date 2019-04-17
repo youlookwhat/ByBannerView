@@ -143,6 +143,39 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
         }
     }
 
+    /**
+     * @param pageRightMargin banner距屏幕的右边距
+     */
+    public SBannerView setPageRightMargin(int pageRightMargin) {
+        this.mPageRightMargin = pageRightMargin;
+        setPageLeftRightMargin(mPageLeftMargin, mPageRightMargin);
+        return this;
+    }
+
+    /**
+     * @param pageLeftMargin banner距屏幕的右边距
+     */
+    public SBannerView setPageLeftMargin(int pageLeftMargin) {
+        this.mPageLeftMargin = pageLeftMargin;
+        setPageLeftRightMargin(mPageLeftMargin, mPageRightMargin);
+        return this;
+    }
+
+    /**
+     * @param pageLeftMargin  banner距屏幕的左边距
+     * @param pageRightMargin banner距屏幕的右边距
+     */
+    public SBannerView setPageLeftRightMargin(int pageLeftMargin, int pageRightMargin) {
+        this.mPageLeftMargin = pageLeftMargin;
+        this.mPageRightMargin = pageRightMargin;
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        params.leftMargin = mPageLeftMargin;
+        params.rightMargin = mPageRightMargin;
+        viewPager.setLayoutParams(params);
+        return this;
+    }
+
+
     public SBannerView setAutoPlay(boolean isAutoPlay) {
         this.isAutoPlay = isAutoPlay;
         return this;

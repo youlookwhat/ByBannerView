@@ -15,8 +15,8 @@
         app:indicator_height="6dp"
         app:indicator_margin="15dp"
         app:indicator_padding="6dp"
-        app:indicator_width="6dp"
-        app:page_right_margin="59dp" />
+        app:indicator_width="6dp" />
+    <!--app:page_right_margin="59dp"-->
 
     <me.jingbin.sbanner.SBannerView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/banner2"

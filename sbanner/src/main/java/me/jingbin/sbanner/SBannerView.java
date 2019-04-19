@@ -18,10 +18,12 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import me.jingbin.sbanner.config.BannerConfig;
@@ -469,6 +471,12 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
 
     private class BannerPagerAdapter extends PagerAdapter {
 
+        private LinkedList<View> mViewCache;
+
+        BannerPagerAdapter() {
+            this.mViewCache = new LinkedList<>();
+        }
+
         @Override
         public int getCount() {
             if (mDatas.size() == 1) {
@@ -490,10 +498,16 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
             if (creator == null) {
                 throw new RuntimeException("[Banner] --> The layout is not specified,请指定 holder");
             }
-            BannerViewHolder holder = creator.createViewHolder();
-
-            View view = holder.createView(container.getContext());
-            container.addView(view);
+            BannerViewHolder holder;
+            View view;
+            if (mViewCache.size() == 0) {
+                holder = creator.createViewHolder();
+                view = holder.createView(container.getContext());
+                view.setTag(holder);
+            } else {
+                view = mViewCache.removeFirst();
+                holder = (BannerViewHolder) view.getTag();
+            }
 
             if (mDatas != null && mDatas.size() > 0) {
                 holder.onBind(container.getContext(), position, mDatas.get(position));
@@ -506,12 +520,14 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
                     }
                 });
             }
+            container.addView(view);
             return view;
         }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
+            this.mViewCache.add((View) object);
         }
 
     }

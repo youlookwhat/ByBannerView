@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.jingbin.sbanner.SBannerView;
+import me.jingbin.sbanner.config.BannerConfig;
 import me.jingbin.sbanner.config.OnBannerClickListener;
 import me.jingbin.sbanner.config.ScaleRightTransformer;
 import me.jingbin.sbanner.holder.BannerViewHolder;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         banner2 = findViewById(R.id.banner2);
 
         final List<BannerItemBean> list = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             BannerItemBean itemBean = new BannerItemBean();
             itemBean.setTitle("药妆店必BUY扫货指南-" + i);
 //            list.add("药妆店必BUY扫货指南-" + i);
@@ -106,7 +107,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .start();
-
+        banner2.setOnBannerClickListener(new OnBannerClickListener() {
+            @Override
+            public void onBannerClick(int position) {
+                Toast.makeText(getApplicationContext(), list.get(position).getTitle(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     class CustomViewHolder implements BannerViewHolder<BannerItemBean> {
@@ -211,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
         //结束轮播
         banner.stopAutoPlay();
         banner2.stopAutoPlay();
-        cancelAllTimers();
     }
 
     @Override
@@ -222,14 +227,6 @@ public class MainActivity extends AppCompatActivity {
         banner2.startAutoPlay();
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        //开始轮播
-//        banner.startAutoPlay();
-//        banner2.startAutoPlay();
-//    }
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -239,4 +236,11 @@ public class MainActivity extends AppCompatActivity {
         cancelAllTimers();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        banner.setAutoPlay(false).releaseBanner();
+        banner2.setAutoPlay(false).releaseBanner();
+        cancelAllTimers();
+    }
 }

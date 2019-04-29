@@ -23,3 +23,9 @@ dependencies {
 	com.github.youlookwhat:SBannerView:1.0.6
 }
 ```
+
+
+#### 混淆
+```java
+-keep class me.jingbin.sbanner.** {*;}
+```

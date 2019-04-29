@@ -20,7 +20,7 @@ public class BannerConfig {
     public static final int RIGHT = 7;
 
     /**
-     * banner
+     * layout_jbanner
      * PADDING_SIZE:  指示器大小
      * MARGIN_BOTTOM: 指示器距底部的距离
      * TIME:          滚动时间间隔

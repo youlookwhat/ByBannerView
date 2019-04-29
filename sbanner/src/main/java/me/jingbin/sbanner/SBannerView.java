@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 
 import java.lang.reflect.Field;
@@ -102,7 +101,7 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
 
     private void initView(Context context, AttributeSet attrs) {
         handleTypedArray(context, attrs);
-        View view = LayoutInflater.from(context).inflate(R.layout.banner, this, true);
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_jbanner, this, true);
         viewPager = (BannerViewPager) view.findViewById(R.id.bannerViewPager);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         params.leftMargin = mPageLeftMargin;

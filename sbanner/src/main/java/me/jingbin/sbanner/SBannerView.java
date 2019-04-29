@@ -59,9 +59,7 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
     private Drawable mIndicatorSelectedDrawable;
     private Drawable mIndicatorUnselectedDrawable;
     private int count = 0;
-    private int currentItem;
     private int gravity = -1;
-    private int lastPosition;
     private List mDatas;
     private HolderCreator<BannerViewHolder> creator;
     private List<ImageView> indicatorImages;
@@ -77,6 +75,11 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
     private int mPageLeftMargin;
     private int mPageRightMargin;
     private WeakHandler handler = new WeakHandler();
+    // 默认true 滑到到最后一个时，是否返回滑动
+    private boolean isBackLoop = BannerConfig.IS_BACK_LOOP;
+    private static final int NUM = 5000;
+    private int lastPosition;
+    private int currentItem;
 
     public SBannerView(Context context) {
         this(context, null);
@@ -128,8 +131,10 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
         scrollTime = typedArray.getInt(R.styleable.SBannerView_scroll_time, BannerConfig.DURATION);
         isAutoPlay = typedArray.getBoolean(R.styleable.SBannerView_is_auto_play, BannerConfig.IS_AUTO_PLAY);
         isLoop = typedArray.getBoolean(R.styleable.SBannerView_is_loop, BannerConfig.IS_LOOP);
+        isBackLoop = typedArray.getBoolean(R.styleable.SBannerView_is_back_loop, BannerConfig.IS_BACK_LOOP);
         mPageLeftMargin = typedArray.getDimensionPixelSize(R.styleable.SBannerView_page_left_margin, BannerConfig.PAGE_MARGIN);
         mPageRightMargin = typedArray.getDimensionPixelSize(R.styleable.SBannerView_page_right_margin, BannerConfig.PAGE_MARGIN);
+        currentItem = isBackLoop ? 0 : -1;
         typedArray.recycle();
     }
 
@@ -353,12 +358,27 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
     }
 
     private void setData() {
-        if (isLoop) {
-            currentItem = 0;
-            lastPosition = 0;
+        if (isBackLoop) {
+            if (isLoop) {
+                currentItem = 0;
+                lastPosition = 0;
+            } else {
+                currentItem = 0;
+                lastPosition = 0;
+            }
         } else {
-            currentItem = 0;
-            lastPosition = 0;
+            if (isLoop) {
+                //currentItem = 1;
+                if (currentItem == -1) {
+                    currentItem = NUM / 2 - ((NUM / 2) % count) + 1;
+                }
+                lastPosition = 1;
+            } else {
+                if (currentItem == -1) {
+                    currentItem = 0;
+                }
+                lastPosition = 0;
+            }
         }
         if (adapter == null) {
             adapter = new BannerPagerAdapter();
@@ -396,48 +416,69 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
         @Override
         public void run() {
             if (count > 1) {
-                // 下一个
-                if (isSlipRight) {
+                if (isBackLoop) {
+                    // 下一个
+                    if (isSlipRight) {
 
-                    // > 最大值
-                    int pagerCurrentItem = viewPager.getCurrentItem();
-                    if (pagerCurrentItem >= adapter.getCount()) {
-                        pagerCurrentItem = adapter.getCount() - 1;
+                        // > 最大值
+                        int pagerCurrentItem = viewPager.getCurrentItem();
+                        if (pagerCurrentItem >= adapter.getCount()) {
+                            pagerCurrentItem = adapter.getCount() - 1;
+                        }
+
+                        // 2+1
+                        currentItem = pagerCurrentItem + 1;
+                        if (currentItem == adapter.getCount()) {
+                            isSlipRight = false;
+                        }
+                    } else {
+                        int pagerCurrentItem = viewPager.getCurrentItem();
+                        if (pagerCurrentItem <= 1) {
+                            pagerCurrentItem = 1;
+                        }
+                        currentItem = pagerCurrentItem - 1;
+                        if (currentItem <= 0) {
+                            isSlipRight = true;
+                        }
                     }
 
-                    // 2+1
-                    currentItem = pagerCurrentItem + 1;
-                    if (currentItem == adapter.getCount()) {
-                        isSlipRight = false;
-                    }
-                } else {
-                    int pagerCurrentItem = viewPager.getCurrentItem();
-                    if (pagerCurrentItem <= 1) {
-                        pagerCurrentItem = 1;
-                    }
-                    currentItem = pagerCurrentItem - 1;
-                    if (currentItem <= 0) {
-                        isSlipRight = true;
-                    }
-                }
-
-                if (isLoop) {
-                    // 最后一个 向前滑
-                    if (currentItem == adapter.getCount()) {
+                    if (isLoop) {
+                        // 最后一个 向前滑
+                        if (currentItem == adapter.getCount()) {
 //                        Log.e("currentItem1", currentItem + "");
-                        viewPager.setCurrentItem(currentItem);
-                        handler.post(task);
-                    } else {
+                            viewPager.setCurrentItem(currentItem);
+                            handler.post(task);
+                        } else {
 //                        Log.e("currentItem2", currentItem + "");
-                        viewPager.setCurrentItem(currentItem);
-                        handler.postDelayed(task, delayTime);
+                            viewPager.setCurrentItem(currentItem);
+                            handler.postDelayed(task, delayTime);
+                        }
+                    } else {
+                        if (currentItem >= adapter.getCount()) {
+                            stopAutoPlay();
+                        } else {
+                            viewPager.setCurrentItem(currentItem);
+                            handler.postDelayed(task, delayTime);
+                        }
                     }
                 } else {
-                    if (currentItem >= adapter.getCount()) {
-                        stopAutoPlay();
+                    currentItem = viewPager.getCurrentItem() + 1;
+                    if (isLoop) {
+                        if (currentItem == adapter.getCount() - 1) {
+                            currentItem = 0;
+                            viewPager.setCurrentItem(currentItem, false);
+                            handler.post(task);
+                        } else {
+                            viewPager.setCurrentItem(currentItem);
+                            handler.postDelayed(task, delayTime);
+                        }
                     } else {
-                        viewPager.setCurrentItem(currentItem);
-                        handler.postDelayed(task, delayTime);
+                        if (currentItem >= adapter.getCount()) {
+                            stopAutoPlay();
+                        } else {
+                            viewPager.setCurrentItem(currentItem);
+                            handler.postDelayed(task, delayTime);
+                        }
                     }
                 }
             }
@@ -484,7 +525,17 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
             } else if (mDatas.size() < 1) {
                 return 0;
             } else {
-                return mDatas.size();
+                if (isBackLoop) {
+                    // 返回播放
+                    return mDatas.size();
+                } else {
+                    // 循环播放
+                    if (isLoop) {
+                        return NUM;
+                    } else {
+                        return mDatas.size();
+                    }
+                }
             }
         }
 
@@ -510,13 +561,21 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
             }
 
             if (mDatas != null && mDatas.size() > 0) {
-                holder.onBind(container.getContext(), position, mDatas.get(position));
+                if (isBackLoop) {
+                    holder.onBind(container.getContext(), position, mDatas.get(position));
+                } else {
+                    holder.onBind(container.getContext(), toRealPosition(position), mDatas.get(toRealPosition(position)));
+                }
             }
             if (listener != null) {
                 view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        listener.onBannerClick(position);
+                        if (isBackLoop) {
+                            listener.onBannerClick(position);
+                        } else {
+                            listener.onBannerClick(toRealPosition(position));
+                        }
                     }
                 });
             }
@@ -542,7 +601,11 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         if (mOnPageChangeListener != null) {
-            mOnPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            if (isBackLoop) {
+                mOnPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            } else {
+                mOnPageChangeListener.onPageScrolled(toRealPosition(position), positionOffset, positionOffsetPixels);
+            }
         }
     }
 
@@ -550,31 +613,71 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
     public void onPageSelected(int position) {
         currentItem = position;
         if (mOnPageChangeListener != null) {
-            mOnPageChangeListener.onPageSelected(position);
+            if (isBackLoop) {
+                mOnPageChangeListener.onPageSelected(position);
+            } else {
+                mOnPageChangeListener.onPageSelected(toRealPosition(position));
+            }
         }
         if (bannerStyle == BannerConfig.CIRCLE_INDICATOR ||
                 bannerStyle == BannerConfig.CUSTOM_INDICATOR) {
             if (isLoop) {
-                if (mIndicatorSelectedDrawable != null && mIndicatorUnselectedDrawable != null) {
-                    // 未选择的图片
-                    indicatorImages.get(lastPosition).setImageDrawable(mIndicatorUnselectedDrawable);
-                    // 选择的图片
-                    indicatorImages.get(position).setImageDrawable(mIndicatorSelectedDrawable);
+                if (isBackLoop) {
+                    // 返回播放
+                    if (mIndicatorSelectedDrawable != null && mIndicatorUnselectedDrawable != null) {
+                        // 未选择的图片
+                        indicatorImages.get(lastPosition).setImageDrawable(mIndicatorUnselectedDrawable);
+                        // 选择的图片
+                        indicatorImages.get(position).setImageDrawable(mIndicatorSelectedDrawable);
+                    } else {
+                        indicatorImages.get(lastPosition).setImageResource(mIndicatorUnselectedResId);
+                        indicatorImages.get(position).setImageResource(mIndicatorSelectedResId);
+                    }
                 } else {
-                    indicatorImages.get(lastPosition).setImageResource(mIndicatorUnselectedResId);
-                    indicatorImages.get(position).setImageResource(mIndicatorSelectedResId);
+                    if (mIndicatorSelectedDrawable != null && mIndicatorUnselectedDrawable != null) {
+                        indicatorImages.get((lastPosition - 1 + count) % count).setImageDrawable(mIndicatorUnselectedDrawable);
+                        indicatorImages.get((position - 1 + count) % count).setImageDrawable(mIndicatorSelectedDrawable);
+                    } else {
+                        indicatorImages.get((lastPosition - 1 + count) % count).setImageResource(mIndicatorUnselectedResId);
+                        indicatorImages.get((position - 1 + count) % count).setImageResource(mIndicatorSelectedResId);
+                    }
                 }
             } else {
-                if (mIndicatorSelectedDrawable != null && mIndicatorUnselectedDrawable != null) {
-                    indicatorImages.get(lastPosition).setImageDrawable(mIndicatorUnselectedDrawable);
-                    indicatorImages.get(position).setImageDrawable(mIndicatorSelectedDrawable);
+                if (isBackLoop) {
+                    // 返回播放
+                    if (mIndicatorSelectedDrawable != null && mIndicatorUnselectedDrawable != null) {
+                        indicatorImages.get(lastPosition).setImageDrawable(mIndicatorUnselectedDrawable);
+                        indicatorImages.get(position).setImageDrawable(mIndicatorSelectedDrawable);
+                    } else {
+                        indicatorImages.get(lastPosition).setImageResource(mIndicatorUnselectedResId);
+                        indicatorImages.get(position).setImageResource(mIndicatorSelectedResId);
+                    }
                 } else {
-                    indicatorImages.get(lastPosition).setImageResource(mIndicatorUnselectedResId);
-                    indicatorImages.get(position).setImageResource(mIndicatorSelectedResId);
+                    if (mIndicatorSelectedDrawable != null && mIndicatorUnselectedDrawable != null) {
+                        indicatorImages.get((lastPosition + count) % count).setImageDrawable(mIndicatorUnselectedDrawable);
+                        indicatorImages.get((toRealPosition(position) + count) % count).setImageDrawable(mIndicatorSelectedDrawable);
+                    } else {
+                        indicatorImages.get((lastPosition + count) % count).setImageResource(mIndicatorUnselectedResId);
+                        indicatorImages.get((toRealPosition(position) + count) % count).setImageResource(mIndicatorSelectedResId);
+                    }
                 }
             }
             lastPosition = position;
         }
+    }
+
+    private int toRealPosition(int position) {
+        //int realPosition = (position - 1) % count;
+        int realPosition;
+        if (isLoop) {
+            realPosition = (position - 1 + count) % count;
+        } else {
+            realPosition = (position + count) % count;
+        }
+        if (realPosition < 0) {
+            realPosition += count;
+        }
+        return realPosition;
     }
 
     public void setOnBannerClickListener(OnBannerClickListener listener) {

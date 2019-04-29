@@ -28,6 +28,7 @@ public class BannerConfig {
      * IS_AUTO_PLAY:  是否自动循环
      * IS_SCROLL:     ViewPager是否能手动滑动
      * IS_LOOP:       是否循环播放，false则循环一轮后停止
+     * IS_BACK_LOOP:  滑到到最后一个时，是否返回滑动，false则循环播放
      */
     public static final int PADDING_SIZE = 5;
     public static final int MARGIN_BOTTOM = 10;
@@ -36,6 +37,7 @@ public class BannerConfig {
     public static final boolean IS_AUTO_PLAY = true;
     public static final boolean IS_SCROLL = true;
     public static final boolean IS_LOOP = true;
+    public static final boolean IS_BACK_LOOP = true;
 
     /**
      * margin 左右的间距

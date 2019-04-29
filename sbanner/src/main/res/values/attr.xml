@@ -5,6 +5,7 @@
         <attr name="scroll_time" format="integer" />
         <attr name="is_auto_play" format="boolean" />
         <attr name="is_loop" format="boolean" />
+        <attr name="is_back_loop" format="boolean" />
         <attr name="indicator_width" format="dimension" />
         <attr name="indicator_height" format="dimension" />
         <attr name="indicator_margin" format="dimension" />

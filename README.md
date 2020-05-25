@@ -20,10 +20,14 @@ Step 2. Add the dependency
 
 ```java
 dependencies {
-	com.github.youlookwhat:SBannerView:1.0.6
+	com.github.youlookwhat:SBannerView:1.1.5
 }
 ```
 
+#### 功能
+ - 1.默认滑动到最后一条时，往回轮播
+ - 2.可设置右边距的轮播图，也可支持左右都有间距的轮播图
+ - 3.支持正常轮播图，并往回轮播或者循环轮播
 
 #### 混淆
 ```java

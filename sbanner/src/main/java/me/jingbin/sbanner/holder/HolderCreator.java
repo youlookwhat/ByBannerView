@@ -8,7 +8,7 @@ package me.jingbin.sbanner.holder;
  * 需要 --
  * 可以 --
  */
-public interface HolderCreator<VH extends BannerViewHolder> {
+public interface HolderCreator<VH extends SBannerViewHolder> {
 
     /**
      * 创建ViewHolder

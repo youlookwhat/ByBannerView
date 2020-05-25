@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -16,10 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.jingbin.sbanner.SBannerView;
-import me.jingbin.sbanner.config.BannerConfig;
 import me.jingbin.sbanner.config.OnBannerClickListener;
 import me.jingbin.sbanner.config.ScaleRightTransformer;
-import me.jingbin.sbanner.holder.BannerViewHolder;
+import me.jingbin.sbanner.holder.SBannerViewHolder;
 import me.jingbin.sbanner.holder.HolderCreator;
 
 /**
@@ -41,32 +41,21 @@ public class MainActivity extends AppCompatActivity {
         banner = findViewById(R.id.banner);
         banner2 = findViewById(R.id.banner2);
 
-        final List<BannerItemBean> list = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            BannerItemBean itemBean = new BannerItemBean();
-            itemBean.setTitle("药妆店必BUY扫货指南-" + i);
-//            list.add("药妆店必BUY扫货指南-" + i);
-            long applyEndTime = 1555671600;
-            if (i == 0) {
-                applyEndTime = 1555671600;
-            } else if (i == 1) {
-                applyEndTime = 1555689600;
-            } else if (i == 2) {
-                applyEndTime = 1556035200;
-            }
-            itemBean.setApplyEndTime(applyEndTime);
-            list.add(itemBean);
-        }
-        banner
-                .setPageRightMargin(dip2px(this, 59))
+        final List<BannerItemBean> list = getList(4);
+        setBannerView(list);
+        setBanner2View(list);
+    }
+
+    private void setBannerView(final List<BannerItemBean> list) {
+        banner.setPageRightMargin(dip2px(this, 59))
 //                .setAutoPlay(true)
 //                .setBannerStyle(BannerConfig.NOT_INDICATOR)
                 .setBannerAnimation(ScaleRightTransformer.class)
                 .setOffscreenPageLimit(list.size())
                 .setDelayTime(3000)
-                .setPages(list, new HolderCreator<BannerViewHolder>() {
+                .setPages(list, new HolderCreator<SBannerViewHolder>() {
                     @Override
-                    public BannerViewHolder createViewHolder() {
+                    public SBannerViewHolder createViewHolder() {
                         return new CustomViewHolder();
                     }
                 })
@@ -93,16 +82,18 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    private void setBanner2View(final List<BannerItemBean> list) {
         banner2
 //                .setAutoPlay(true)
 //                .setBannerStyle(BannerConfig.NOT_INDICATOR)
                 .setBannerAnimation(ScaleRightTransformer.class)
                 .setOffscreenPageLimit(list.size())
                 .setDelayTime(3000)
-                .setPages(list, new HolderCreator<BannerViewHolder>() {
+                .setPages(list, new HolderCreator<SBannerViewHolder>() {
                     @Override
-                    public BannerViewHolder createViewHolder() {
+                    public SBannerViewHolder createViewHolder() {
                         return new CustomViewHolder2();
                     }
                 })
@@ -115,19 +106,21 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    class CustomViewHolder implements BannerViewHolder<BannerItemBean> {
+    class CustomViewHolder implements SBannerViewHolder<BannerItemBean> {
 
         private TextView mTextView;
         private TextView tvDay;
         private TextView tvHour;
         private TextView tvMin;
         private TextView tvMiao;
+        private AppCompatButton btRefresh;
         CountDownTimer countDownTimer;
 
         @Override
         public View createView(Context context) {
             View view = LayoutInflater.from(context).inflate(R.layout.banner_item, null);
             mTextView = (TextView) view.findViewById(R.id.text);
+            btRefresh = (AppCompatButton) view.findViewById(R.id.bt_refresh);
             tvDay = (TextView) view.findViewById(R.id.tv_day);
             tvHour = (TextView) view.findViewById(R.id.tv_hour);
             tvMin = (TextView) view.findViewById(R.id.tv_min);
@@ -137,6 +130,19 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBind(Context context, int position, BannerItemBean data) {
+            if (position == 3) {
+                btRefresh.setText("刷新");
+                btRefresh.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setBannerView(getList(2));
+                        setBanner2View(getList(2));
+                    }
+                });
+            } else {
+                btRefresh.setText("立即申请");
+                btRefresh.setOnClickListener(null);
+            }
             // 数据绑定
             mTextView.setText(String.format("%d：%s", position, data.getTitle()));
 
@@ -174,12 +180,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    class CustomViewHolder2 implements BannerViewHolder<BannerItemBean> {
+    static class CustomViewHolder2 implements SBannerViewHolder<BannerItemBean> {
 
         @Override
         public View createView(Context context) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_banner_two, null);
-            return view;
+            return LayoutInflater.from(context).inflate(R.layout.item_banner_two, null);
         }
 
         @Override
@@ -209,6 +214,25 @@ public class MainActivity extends AppCompatActivity {
     public static int dip2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
+    }
+
+    private List<BannerItemBean> getList(int size) {
+        List<BannerItemBean> list = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            BannerItemBean itemBean = new BannerItemBean();
+            itemBean.setTitle("我是标题-" + i);
+            long applyEndTime;
+            if (i == 0) {
+                applyEndTime = System.currentTimeMillis() / 1000 + 6000;
+            } else if (i == 1) {
+                applyEndTime = System.currentTimeMillis() / 1000 + 5000;
+            } else {
+                applyEndTime = System.currentTimeMillis() / 1000 + 4000;
+            }
+            itemBean.setApplyEndTime(applyEndTime);
+            list.add(itemBean);
+        }
+        return list;
     }
 
     @Override

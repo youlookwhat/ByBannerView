@@ -7,7 +7,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,7 +29,7 @@ import me.jingbin.sbanner.config.BannerScroller;
 import me.jingbin.sbanner.config.BannerViewPager;
 import me.jingbin.sbanner.config.OnBannerClickListener;
 import me.jingbin.sbanner.config.WeakHandler;
-import me.jingbin.sbanner.holder.BannerViewHolder;
+import me.jingbin.sbanner.holder.SBannerViewHolder;
 import me.jingbin.sbanner.holder.HolderCreator;
 
 import static android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -60,7 +59,7 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
     private int count = 0;
     private int gravity = -1;
     private List mDatas;
-    private HolderCreator<BannerViewHolder> creator;
+    private HolderCreator<SBannerViewHolder> creator;
     private List<ImageView> indicatorImages;
     private Context context;
     private BannerViewPager viewPager;
@@ -245,7 +244,7 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
         return this;
     }
 
-    public SBannerView setPages(List<?> datas, HolderCreator<BannerViewHolder> creator) {
+    public SBannerView setPages(List<?> datas, HolderCreator<SBannerViewHolder> creator) {
         this.mDatas = datas;
         this.creator = creator;
         this.count = datas.size();
@@ -367,15 +366,10 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
             }
         } else {
             if (isLoop) {
-                //currentItem = 1;
-                if (currentItem == -1) {
-                    currentItem = NUM / 2 - ((NUM / 2) % count) + 1;
-                }
+                currentItem = NUM / 2 - ((NUM / 2) % count) + 1;
                 lastPosition = 1;
             } else {
-                if (currentItem == -1) {
-                    currentItem = 0;
-                }
+                currentItem = 0;
                 lastPosition = 0;
             }
         }
@@ -384,7 +378,6 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
             viewPager.addOnPageChangeListener(this);
         }
         viewPager.setAdapter(adapter);
-        Log.e("currentItem", currentItem + "");
         viewPager.setCurrentItem(currentItem);
         viewPager.setOffscreenPageLimit(count);
         if (isScroll && count > 1) {
@@ -444,11 +437,9 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
                     if (isLoop) {
                         // 最后一个 向前滑
                         if (currentItem == adapter.getCount()) {
-//                        Log.e("currentItem1", currentItem + "");
                             viewPager.setCurrentItem(currentItem);
                             handler.post(task);
                         } else {
-//                        Log.e("currentItem2", currentItem + "");
                             viewPager.setCurrentItem(currentItem);
                             handler.postDelayed(task, delayTime);
                         }
@@ -548,7 +539,7 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
             if (creator == null) {
                 throw new RuntimeException("[Banner] --> The layout is not specified,请指定 holder");
             }
-            BannerViewHolder holder;
+            SBannerViewHolder holder;
             View view;
             if (mViewCache.size() == 0) {
                 holder = creator.createViewHolder();
@@ -556,7 +547,7 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
                 view.setTag(holder);
             } else {
                 view = mViewCache.removeFirst();
-                holder = (BannerViewHolder) view.getTag();
+                holder = (SBannerViewHolder) view.getTag();
             }
 
             if (mDatas != null && mDatas.size() > 0) {

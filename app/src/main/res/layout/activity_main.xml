@@ -11,7 +11,7 @@
     <me.jingbin.sbanner.SBannerView
         android:id="@+id/banner"
         android:layout_width="match_parent"
-        android:layout_height="370dp"
+        android:layout_height="330dp"
         app:indicator_height="6dp"
         app:indicator_margin="15dp"
         app:indicator_padding="6dp"

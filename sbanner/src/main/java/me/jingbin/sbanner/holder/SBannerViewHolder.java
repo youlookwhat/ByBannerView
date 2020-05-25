@@ -3,7 +3,7 @@ package me.jingbin.sbanner.holder;
 import android.content.Context;
 import android.view.View;
 
-public interface BannerViewHolder<T> {
+public interface SBannerViewHolder<T> {
 
     /**
      * 创建View

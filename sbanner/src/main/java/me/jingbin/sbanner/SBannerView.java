@@ -158,7 +158,7 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
     }
 
     /**
-     * @param pageLeftMargin banner距屏幕的右边距
+     * @param pageLeftMargin banner距屏幕的左边距
      */
     public SBannerView setPageLeftMargin(int pageLeftMargin) {
         this.mPageLeftMargin = pageLeftMargin;

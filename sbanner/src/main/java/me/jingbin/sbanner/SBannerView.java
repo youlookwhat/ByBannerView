@@ -41,43 +41,58 @@ import static android.support.v4.view.ViewPager.PageTransformer;
  */
 public class SBannerView extends FrameLayout implements OnPageChangeListener {
 
+    // 单个指示器左右的间距
     private int mIndicatorPadding = BannerConfig.PADDING_SIZE;
+    // 指示器距离底部的高度
     private int mIndicatorMargin = BannerConfig.MARGIN_BOTTOM;
+    // 指示器距离左侧的宽度
+    private int mIndicatorMarginLeft = 0;
+    // 指示器距离右侧的宽度
+    private int mIndicatorMarginRight = 0;
+    // 单个指示器的宽度
     private int mIndicatorWidth;
+    // 单个指示器的高度
     private int mIndicatorHeight;
-    private int indicatorSize;
+    // 指示器显示样式：不显示/自带/自定义
     private int bannerStyle = BannerConfig.CIRCLE_INDICATOR;
+    // 滚动间隔时间
     private int delayTime = BannerConfig.TIME;
+    // ViewPager切换滑动速度 时间越大速度越慢
     private int scrollTime = BannerConfig.DURATION;
+    // 是否自动循环滚动，默认true
     private boolean isAutoPlay = BannerConfig.IS_AUTO_PLAY;
+    // ViewPager是否能手动滑动，默认true
     private boolean isScroll = BannerConfig.IS_SCROLL;
+    // 是否循环播放，false则循环一轮后停止，默认true
     private boolean isLoop = BannerConfig.IS_LOOP;
-    private int mIndicatorSelectedResId = R.drawable.gray_radius;
-    private int mIndicatorUnselectedResId = R.drawable.white_radius;
-    private Drawable mIndicatorSelectedDrawable;
-    private Drawable mIndicatorUnselectedDrawable;
+    // 滑动到头后，是否返回滑动，默认true，返回滑动！
+    private boolean isBackLoop = BannerConfig.IS_BACK_LOOP;
+    // 指示器的默认宽高
+    private final int indicatorSize;
+    private static final int NUM = 5000;
+
     private int count = 0;
     private int gravity = -1;
     private List mDatas;
-    private HolderCreator<SBannerViewHolder> creator;
-    private List<ImageView> indicatorImages;
-    private Context context;
-    private BannerViewPager viewPager;
     private int widthPixels;
-    // 指示器
-    private LinearLayout indicator;
-
-    private BannerPagerAdapter adapter;
-    private OnPageChangeListener mOnPageChangeListener;
-    private OnBannerClickListener listener;
-    private int mPageLeftMargin;
-    private int mPageRightMargin;
-    private WeakHandler handler = new WeakHandler();
-    // 默认true 滑到到最后一个时，是否返回滑动
-    private boolean isBackLoop = BannerConfig.IS_BACK_LOOP;
-    private static final int NUM = 5000;
     private int lastPosition;
     private int currentItem;
+    private int mPageLeftMargin;
+    private int mPageRightMargin;
+    private List<ImageView> indicatorImages;
+    private HolderCreator<SBannerViewHolder> creator;
+    private final WeakHandler handler = new WeakHandler();
+
+    private Context context;
+    private LinearLayout indicator;
+    private BannerViewPager viewPager;
+    private BannerPagerAdapter adapter;
+    private OnBannerClickListener listener;
+    private Drawable mIndicatorSelectedDrawable;
+    private Drawable mIndicatorUnselectedDrawable;
+    private OnPageChangeListener mOnPageChangeListener;
+    private int mIndicatorSelectedResId = R.drawable.gray_radius;
+    private int mIndicatorUnselectedResId = R.drawable.white_radius;
 
     public SBannerView(Context context) {
         this(context, null);
@@ -107,9 +122,10 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
         params.rightMargin = mPageRightMargin;
         viewPager.setLayoutParams(params);
         indicator = (LinearLayout) view.findViewById(R.id.circleIndicator);
-        RelativeLayout.LayoutParams indicatorParam = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams indicatorParam = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         indicatorParam.bottomMargin = mIndicatorMargin;
+        indicatorParam.leftMargin = mIndicatorMarginLeft - mIndicatorPadding;
+        indicatorParam.rightMargin = mIndicatorMarginRight - mIndicatorPadding;
         indicator.setLayoutParams(indicatorParam);
         initViewPagerScroll();
     }
@@ -123,6 +139,8 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
         mIndicatorHeight = typedArray.getDimensionPixelSize(R.styleable.SBannerView_indicator_height, indicatorSize);
         mIndicatorPadding = typedArray.getDimensionPixelSize(R.styleable.SBannerView_indicator_padding, BannerConfig.PADDING_SIZE);
         mIndicatorMargin = typedArray.getDimensionPixelSize(R.styleable.SBannerView_indicator_margin, BannerConfig.MARGIN_BOTTOM);
+        mIndicatorMarginLeft = typedArray.getDimensionPixelSize(R.styleable.SBannerView_indicator_margin_left, 0);
+        mIndicatorMarginRight = typedArray.getDimensionPixelSize(R.styleable.SBannerView_indicator_margin_right, 0);
         mIndicatorSelectedResId = typedArray.getResourceId(R.styleable.SBannerView_indicator_drawable_selected, R.drawable.gray_radius);
         mIndicatorUnselectedResId = typedArray.getResourceId(R.styleable.SBannerView_indicator_drawable_unselected, R.drawable.white_radius);
         delayTime = typedArray.getInt(R.styleable.SBannerView_delay_time, BannerConfig.TIME);

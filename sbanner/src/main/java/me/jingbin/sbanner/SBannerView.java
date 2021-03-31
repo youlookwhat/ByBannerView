@@ -568,24 +568,26 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
                 holder = (SBannerViewHolder) view.getTag();
             }
 
-            if (mDatas != null && mDatas.size() > 0) {
-                if (isBackLoop) {
-                    holder.onBind(container.getContext(), position, mDatas.get(position));
-                } else {
-                    holder.onBind(container.getContext(), toRealPosition(position), mDatas.get(toRealPosition(position)));
-                }
-            }
-            if (listener != null) {
-                view.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            // 设置点击事件，在onBind设置点击事件可将此点击事件覆盖
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
                         if (isBackLoop) {
                             listener.onBannerClick(position);
                         } else {
                             listener.onBannerClick(toRealPosition(position));
                         }
                     }
-                });
+                }
+            });
+
+            if (mDatas != null && mDatas.size() > 0) {
+                if (isBackLoop) {
+                    holder.onBind(container.getContext(), position, mDatas.get(position));
+                } else {
+                    holder.onBind(container.getContext(), toRealPosition(position), mDatas.get(toRealPosition(position)));
+                }
             }
             container.addView(view);
             return view;

@@ -1,7 +1,8 @@
 package me.jingbin.sbanner.config;
 
-import android.support.v4.view.ViewPager;
 import android.view.View;
+
+import androidx.viewpager.widget.ViewPager;
 
 public class ScaleRightTransformer implements ViewPager.PageTransformer {
 

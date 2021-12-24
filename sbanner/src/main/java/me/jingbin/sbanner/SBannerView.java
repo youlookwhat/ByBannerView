@@ -3,10 +3,9 @@ package me.jingbin.sbanner;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,6 +17,9 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -32,14 +34,12 @@ import me.jingbin.sbanner.config.WeakHandler;
 import me.jingbin.sbanner.holder.SBannerViewHolder;
 import me.jingbin.sbanner.holder.HolderCreator;
 
-import static android.support.v4.view.ViewPager.OnPageChangeListener;
-import static android.support.v4.view.ViewPager.PageTransformer;
 
 /**
  * @author jingbin
  * link: https://github.com/youlookwhat/SBannerView
  */
-public class SBannerView extends FrameLayout implements OnPageChangeListener {
+public class SBannerView extends FrameLayout implements ViewPager.OnPageChangeListener {
 
     // 单个指示器左右的间距
     private int mIndicatorPadding = BannerConfig.PADDING_SIZE;
@@ -90,7 +90,7 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
     private OnBannerClickListener listener;
     private Drawable mIndicatorSelectedDrawable;
     private Drawable mIndicatorUnselectedDrawable;
-    private OnPageChangeListener mOnPageChangeListener;
+    private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private int mIndicatorSelectedResId = R.drawable.gray_radius;
     private int mIndicatorUnselectedResId = R.drawable.white_radius;
 
@@ -231,8 +231,9 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
         return this;
     }
 
-    public SBannerView setBannerAnimation(Class<? extends PageTransformer> transformer) {
+    public SBannerView setBannerAnimation(Class<? extends ViewPager.PageTransformer> transformer) {
         try {
+            viewPager.setHandleAttached(false);
             viewPager.setPageTransformer(true, transformer.newInstance());
         } catch (Exception ignored) {
 
@@ -247,7 +248,8 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
         return this;
     }
 
-    public SBannerView setPageTransformer(boolean reverseDrawingOrder, PageTransformer transformer) {
+    public SBannerView setPageTransformer(boolean reverseDrawingOrder, ViewPager.PageTransformer transformer) {
+        viewPager.setHandleAttached(false);
         viewPager.setPageTransformer(reverseDrawingOrder, transformer);
         return this;
     }
@@ -694,7 +696,7 @@ public class SBannerView extends FrameLayout implements OnPageChangeListener {
         this.listener = listener;
     }
 
-    public void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
+    public void setOnPageChangeListener(ViewPager.OnPageChangeListener onPageChangeListener) {
         mOnPageChangeListener = onPageChangeListener;
     }
 

@@ -1,1 +1,1 @@
-include ':app', ':sbanner'
+include ':app', ':bybanner'

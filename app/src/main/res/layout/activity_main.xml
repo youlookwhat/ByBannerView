@@ -12,17 +12,18 @@
         tools:context=".MainActivity">
 
 
-        <me.jingbin.sbanner.SBannerView
+        <me.jingbin.banner.ByBannerView
             android:id="@+id/banner"
             android:layout_width="match_parent"
             android:layout_height="330dp"
             app:indicator_height="6dp"
             app:indicator_margin="15dp"
             app:indicator_padding="6dp"
-            app:indicator_width="6dp" />
+            app:indicator_width="6dp"
+            app:is_back_loop="true" />
         <!--app:page_right_margin="59dp"-->
 
-        <me.jingbin.sbanner.SBannerView
+        <me.jingbin.banner.ByBannerView
             android:id="@+id/banner2"
             android:layout_width="match_parent"
             android:layout_height="200dp"
@@ -30,12 +31,11 @@
             app:indicator_margin="15dp"
             app:indicator_padding="6dp"
             app:indicator_width="6dp"
-            app:is_back_loop="false"
             app:page_left_margin="30dp"
             app:page_right_margin="30dp" />
 
 
-        <me.jingbin.sbanner.SBannerView
+        <me.jingbin.banner.ByBannerView
             android:id="@+id/banner3"
             android:layout_width="match_parent"
             android:layout_height="200dp"
@@ -43,7 +43,6 @@
             app:indicator_height="6dp"
             app:indicator_margin="15dp"
             app:indicator_padding="6dp"
-            app:indicator_width="6dp"
-            app:is_back_loop="false" />
+            app:indicator_width="6dp" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

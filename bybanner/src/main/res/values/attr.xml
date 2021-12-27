@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ByBannerView">
+        <attr name="delay_time" format="integer" />
+        <attr name="scroll_time" format="integer" />
+        <attr name="is_auto_play" format="boolean" />
+        <attr name="is_loop" format="boolean" />
+        <attr name="is_back_loop" format="boolean" />
+        <attr name="indicator_width" format="dimension" />
+        <attr name="indicator_height" format="dimension" />
+        <attr name="indicator_margin" format="dimension" />
+        <attr name="indicator_margin_left" format="dimension" />
+        <attr name="indicator_margin_right" format="dimension" />
+        <attr name="indicator_padding" format="dimension" />
+        <attr name="indicator_drawable_selected" format="reference" />
+        <attr name="indicator_drawable_unselected" format="reference" />
+        <!-- 设置左右2边缩进距离 -->
+        <attr name="page_left_margin" format="dimension" />
+        <attr name="page_right_margin" format="dimension" />
+    </declare-styleable>
+</resources>

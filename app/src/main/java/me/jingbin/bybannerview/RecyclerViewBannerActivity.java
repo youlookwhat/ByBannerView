@@ -46,6 +46,12 @@ public class RecyclerViewBannerActivity extends AppCompatActivity {
 
             }
         });
+        recyclerView.setOnItemClickListener(new ByRecyclerView.OnItemClickListener() {
+            @Override
+            public void onClick(View view, int i) {
+                banner2.update(MainActivity.getList(4));
+            }
+        });
         setBanner2View(MainActivity.getList(5));
 
     }

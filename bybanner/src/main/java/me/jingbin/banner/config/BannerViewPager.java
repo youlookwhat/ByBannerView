@@ -65,10 +65,10 @@ public class BannerViewPager extends ViewPager {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         // 如果设置左右有间距的banner样式时，会初次进去会黏在一起的bug。
-        // 解决方式是：初次进去设置false，滑动不可见时设置为true，然后轮播时动画也不会消失
-        if (!mHandleAttach) {
-            mHandleAttach = true;
-        }
+        // 这样会有另一个问题，在banner不可见刷新banner时左右间距会出现与异常
+//        if (!mHandleAttach) {
+//            mHandleAttach = true;
+//        }
     }
 
     public void setHandleAttached(boolean handleAttach) {

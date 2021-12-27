@@ -2,7 +2,17 @@
 
 ![](https://github.com/youlookwhat/SBannerView/blob/master/sbannerview.gif)
 
-[![](https://jitpack.io/v/youlookwhat/SBannerView.svg)](https://jitpack.io/#youlookwhat/SBannerView)
+[![](https://jitpack.io/v/youlookwhat/ByBannerView.svg)](https://jitpack.io/#youlookwhat/ByBannerView)
+
+
+### 重大更新!!
+> 上个版本1.1.7，如果是左右留边的banner样式，首次进去会有黏在一起的情况，但是没有人反馈，所以我认为这个库基本除了我没人使用，哈哈。如果有人使用看这里就好。
+
+- 1.更改依赖库名：`com.github.youlookwhat:ByBannerView:1.3.0`
+- 2.xml引入更换：`<me.jingbin.banner.ByBannerView/>`
+- 3.混淆修正：`-keep class me.jingbin.banner.** {*;}`
+- 4.如果默认是返回轮播，查看是否添加属性：`app:is_back_loop="true"`
+
 
 #### how to use
 Step 1. Add it in your root build.gradle at the end of repositories:
@@ -20,9 +30,10 @@ Step 2. Add the dependency
 
 ```java
 dependencies {
-	com.github.youlookwhat:SBannerView:1.1.7
+	implementation 'com.github.youlookwhat:ByBannerView:Tag'
 }
 ```
+
 
 #### 功能
  - 1.默认滑动到最后一条时，往回轮播
@@ -107,5 +118,5 @@ class CustomViewHolder implements SBannerViewHolder<BannerItemBean> {
 
 #### 混淆
 ```java
--keep class me.jingbin.sbanner.** {*;}
+-keep class me.jingbin.banner.** {*;}
 ```

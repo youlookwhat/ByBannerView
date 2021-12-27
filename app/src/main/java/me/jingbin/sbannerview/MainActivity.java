@@ -1,6 +1,7 @@
 package me.jingbin.sbannerview;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -30,10 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
     private SBannerView banner;
     private SBannerView banner2;
-    /**
-     * 用于退出activity,避免countdown，造成资源浪费。
-     */
-    private SparseArray<CountDownTimer> countDownMap = new SparseArray<>();
+    private SBannerView banner3;
+    // 用于退出activity,避免countdown，造成资源浪费。
+    private final SparseArray<CountDownTimer> countDownMap = new SparseArray<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +41,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         banner = findViewById(R.id.banner);
         banner2 = findViewById(R.id.banner2);
+        banner3 = findViewById(R.id.banner3);
 
         final List<BannerItemBean> list = getList(4);
         setBannerView(list);
         setBanner2View(list);
+        setBanner3View(list);
     }
 
     private void setBannerView(final List<BannerItemBean> list) {
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         banner.setOnBannerClickListener(new OnBannerClickListener() {
             @Override
             public void onBannerClick(int position) {
+                MainActivity.this.startActivity(new Intent(banner.getContext(), RecyclerViewBannerActivity.class));
                 Toast.makeText(getApplicationContext(), list.get(position).getTitle(), Toast.LENGTH_LONG).show();
             }
         });
@@ -100,6 +103,26 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .start();
         banner2.setOnBannerClickListener(new OnBannerClickListener() {
+            @Override
+            public void onBannerClick(int position) {
+                Toast.makeText(getApplicationContext(), list.get(position).getTitle(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
+    private void setBanner3View(final List<BannerItemBean> list) {
+        banner3.setAutoPlay(true)
+                .setOffscreenPageLimit(list.size())
+                .setDelayTime(3000)
+                .setPages(list, new HolderCreator<SBannerViewHolder>() {
+                    @Override
+                    public SBannerViewHolder createViewHolder() {
+                        return new CustomViewHolder2();
+                    }
+                })
+                .start();
+        banner3.setOnBannerClickListener(new OnBannerClickListener() {
             @Override
             public void onBannerClick(int position) {
                 Toast.makeText(getApplicationContext(), list.get(position).getTitle(), Toast.LENGTH_LONG).show();
@@ -217,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
         return (int) (dpValue * scale + 0.5f);
     }
 
-    private List<BannerItemBean> getList(int size) {
+    public static List<BannerItemBean> getList(int size) {
         List<BannerItemBean> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             BannerItemBean itemBean = new BannerItemBean();
@@ -242,6 +265,7 @@ public class MainActivity extends AppCompatActivity {
         //结束轮播
         banner.stopAutoPlay();
         banner2.stopAutoPlay();
+        banner3.stopAutoPlay();
     }
 
     @Override
@@ -250,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
         //开始轮播
         banner.startAutoPlay();
         banner2.startAutoPlay();
+        banner3.startAutoPlay();
     }
 
     @Override
@@ -258,6 +283,7 @@ public class MainActivity extends AppCompatActivity {
         //结束轮播
         banner.stopAutoPlay();
         banner2.stopAutoPlay();
+        banner3.stopAutoPlay();
         cancelAllTimers();
     }
 
@@ -266,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         banner.setAutoPlay(false).releaseBanner();
         banner2.setAutoPlay(false).releaseBanner();
+        banner3.setAutoPlay(false).releaseBanner();
         cancelAllTimers();
     }
 }

@@ -49,11 +49,7 @@ public class BannerViewPager extends ViewPager {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-//        Log.e("onAttachedToWindow", "mHandleAttach：" + mHandleAttach);
-        /**
-         * 解决完全隐藏ViewPager，再回来时，第一次滑动时没有动画效果，并且，经常出现view没有加载的情况的bug
-         * 会有一个bug：如果banner设置两边有间距时，初次进去会黏在一起；
-         */
+        // 解决完全隐藏ViewPager，再回来时，第一次滑动时没有动画效果，并且，经常出现view没有加载的情况的bug
         if (mHandleAttach) {
             try {
                 Field mFirstLayout = ViewPager.class.getDeclaredField("mFirstLayout");
@@ -63,6 +59,16 @@ public class BannerViewPager extends ViewPager {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        // 如果设置左右有间距的banner样式时，会初次进去会黏在一起的bug。
+        // 解决方式是：初次进去设置false，滑动不可见时设置为true，然后轮播时动画也不会消失
+        if (!mHandleAttach) {
+            mHandleAttach = true;
         }
     }
 

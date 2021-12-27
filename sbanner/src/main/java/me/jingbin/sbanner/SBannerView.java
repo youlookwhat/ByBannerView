@@ -621,6 +621,14 @@ public class SBannerView extends FrameLayout implements ViewPager.OnPageChangeLi
         }
     }
 
+    public int getCurrentItem() {
+        if (isBackLoop) {
+            return viewPager.getCurrentItem();
+        } else {
+            return toRealPosition(viewPager.getCurrentItem());
+        }
+    }
+
     @Override
     public void onPageSelected(int position) {
         currentItem = position;
@@ -631,8 +639,7 @@ public class SBannerView extends FrameLayout implements ViewPager.OnPageChangeLi
                 mOnPageChangeListener.onPageSelected(toRealPosition(position));
             }
         }
-        if (bannerStyle == BannerConfig.CIRCLE_INDICATOR ||
-                bannerStyle == BannerConfig.CUSTOM_INDICATOR) {
+        if (bannerStyle == BannerConfig.CIRCLE_INDICATOR || bannerStyle == BannerConfig.CUSTOM_INDICATOR) {
             if (isLoop) {
                 if (isBackLoop) {
                     // 返回播放

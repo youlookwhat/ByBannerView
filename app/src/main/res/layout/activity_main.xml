@@ -1,33 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:background="@android:color/darker_gray">
 
-    <me.jingbin.sbanner.SBannerView
-        android:id="@+id/banner"
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="330dp"
-        app:indicator_height="6dp"
-        app:indicator_margin="15dp"
-        app:indicator_padding="6dp"
-        app:indicator_width="6dp" />
-    <!--app:page_right_margin="59dp"-->
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
 
-    <me.jingbin.sbanner.SBannerView
-        android:id="@+id/banner2"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        app:indicator_height="6dp"
-        app:indicator_margin="15dp"
-        app:indicator_padding="6dp"
-        app:indicator_width="6dp"
-        app:is_back_loop="false"
-        app:page_left_margin="30dp"
-        app:page_right_margin="30dp" />
 
-</LinearLayout>
+        <me.jingbin.sbanner.SBannerView
+            android:id="@+id/banner"
+            android:layout_width="match_parent"
+            android:layout_height="330dp"
+            app:indicator_height="6dp"
+            app:indicator_margin="15dp"
+            app:indicator_padding="6dp"
+            app:indicator_width="6dp" />
+        <!--app:page_right_margin="59dp"-->
+
+        <me.jingbin.sbanner.SBannerView
+            android:id="@+id/banner2"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:indicator_height="6dp"
+            app:indicator_margin="15dp"
+            app:indicator_padding="6dp"
+            app:indicator_width="6dp"
+            app:is_back_loop="false"
+            app:page_left_margin="30dp"
+            app:page_right_margin="30dp" />
+
+
+        <me.jingbin.sbanner.SBannerView
+            android:id="@+id/banner3"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="30dp"
+            app:indicator_height="6dp"
+            app:indicator_margin="15dp"
+            app:indicator_padding="6dp"
+            app:indicator_width="6dp"
+            app:is_back_loop="false" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

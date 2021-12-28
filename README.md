@@ -8,7 +8,7 @@
 ### 重大更新!!
 > 上个版本1.1.7，如果是左右留边的banner样式，首次进去会有黏在一起的情况，但是没有人反馈，所以我认为这个库基本除了我没人使用，哈哈。如果有人使用看这里就好。
 
-- 1.更改依赖库名：`com.github.youlookwhat:ByBannerView:1.3.0`
+- 1.更改依赖库名：`com.github.youlookwhat:ByBannerView:1.3.1`
 - 2.xml引入更换：`<me.jingbin.banner.ByBannerView/>`
 - 3.混淆修正：`-keep class me.jingbin.banner.** {*;}`
 - 4.如果默认是返回轮播，查看是否添加属性：`app:is_back_loop="true"`
@@ -48,7 +48,7 @@ dependencies {
 | scroll_time  | integer | 800ms | 滚动一页需要多少毫秒|
 | is_auto_play  | boolean | true | 是否自动滚动 |
 | is_loop  | boolean | true | 是否无限滚动，false则滚动到最后一个时停止滚动 |
-| is_back_loop  | boolean |true|**滑到到最后一个时，是否返回滑动，false则循环播放**|
+| is_back_loop  | boolean |false|**滑到到最后一个时，是否返回滑动**|
 | indicator_width  | dimension | DisplayWidth / 80 | 指示器的宽度 |
 | indicator_height  | dimension | DisplayWidth / 80 | 指示器的高度 |
 | indicator_margin  | dimension | 10dp | 指示器距banner最底部的距离 |

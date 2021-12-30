@@ -36,7 +36,7 @@ import me.jingbin.banner.holder.HolderCreator;
 
 /**
  * @author jingbin
- * link: https://github.com/youlookwhat/SBannerView
+ * link: https://github.com/youlookwhat/ByBannerView
  */
 public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeListener {
 
@@ -72,15 +72,15 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
 
     private int count = 0;
     private int gravity = -1;
-    private List mDatas;
     private int widthPixels;
     private int lastPosition;
     private int currentItem;
     private int mPageLeftMargin;
     private int mPageRightMargin;
+    private List mDatas;
     private List<ImageView> indicatorImages;
     private HolderCreator<ByBannerViewHolder> creator;
-    private final WeakHandler handler = new WeakHandler();
+    private WeakHandler handler = null;
 
     private Context context;
     private LinearLayout indicator;
@@ -115,12 +115,12 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
     private void initView(Context context, AttributeSet attrs) {
         handleTypedArray(context, attrs);
         View view = LayoutInflater.from(context).inflate(R.layout.layout_bybanner, this, true);
-        viewPager = (BannerViewPager) view.findViewById(R.id.bannerViewPager);
+        viewPager = view.findViewById(R.id.bannerViewPager);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         params.leftMargin = mPageLeftMargin;
         params.rightMargin = mPageRightMargin;
         viewPager.setLayoutParams(params);
-        indicator = (LinearLayout) view.findViewById(R.id.circleIndicator);
+        indicator = view.findViewById(R.id.circleIndicator);
         RelativeLayout.LayoutParams indicatorParam = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         indicatorParam.bottomMargin = mIndicatorMargin;
         indicatorParam.leftMargin = mIndicatorMarginLeft - mIndicatorPadding;
@@ -271,10 +271,14 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     public void update(List<?> imageUrls) {
-        this.mDatas.clear();
-        this.indicatorImages.clear();
-        this.mDatas.addAll(imageUrls);
-        this.count = this.mDatas.size();
+        if (mDatas != null) {
+            mDatas.clear();
+            mDatas.addAll(imageUrls);
+            count = mDatas.size();
+        }
+        if (indicatorImages != null) {
+            indicatorImages.clear();
+        }
         start();
     }
 
@@ -342,13 +346,6 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
         for (int i = 0; i < count; i++) {
             ImageView imageView = new ImageView(context);
             imageView.setScaleType(ScaleType.CENTER_CROP);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mIndicatorWidth, mIndicatorHeight);
-            params.leftMargin = mIndicatorPadding;
-            params.rightMargin = mIndicatorPadding;
-            LinearLayout.LayoutParams customParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            customParams.leftMargin = mIndicatorPadding;
-            customParams.rightMargin = mIndicatorPadding;
             if (i == 0) {
                 if (mIndicatorSelectedDrawable != null) {
                     imageView.setImageDrawable(mIndicatorSelectedDrawable);
@@ -364,8 +361,14 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
             }
             indicatorImages.add(imageView);
             if (bannerStyle == BannerConfig.CIRCLE_INDICATOR) {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mIndicatorWidth, mIndicatorHeight);
+                params.leftMargin = mIndicatorPadding;
+                params.rightMargin = mIndicatorPadding;
                 indicator.addView(imageView, params);
             } else if (bannerStyle == BannerConfig.CUSTOM_INDICATOR) {
+                LinearLayout.LayoutParams customParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                customParams.leftMargin = mIndicatorPadding;
+                customParams.rightMargin = mIndicatorPadding;
                 indicator.addView(imageView, customParams);
             }
         }
@@ -399,23 +402,23 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(currentItem);
         viewPager.setOffscreenPageLimit(count);
-        if (isScroll && count > 1) {
-            viewPager.setScrollable(true);
-        } else {
-            viewPager.setScrollable(false);
-        }
+        viewPager.setScrollable(isScroll && count > 1);
         startAutoPlay();
     }
 
     public void startAutoPlay() {
-        if (isAutoPlay) {
+        if (isAutoPlay && count > 1) {
+            // 设置了自动轮播且数据大于1
+            if (handler == null) {
+                handler = new WeakHandler();
+            }
             handler.removeCallbacks(task);
             handler.postDelayed(task, delayTime);
         }
     }
 
     public void stopAutoPlay() {
-        if (isAutoPlay) {
+        if (isAutoPlay && handler != null) {
             handler.removeCallbacks(task);
         }
     }
@@ -427,6 +430,9 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
         @Override
         public void run() {
             if (count > 1) {
+                if (handler == null) {
+                    handler = new WeakHandler();
+                }
                 if (isBackLoop) {
                     // 下一个
                     if (isSlipRight) {
@@ -529,6 +535,9 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
 
         @Override
         public int getCount() {
+            if (mDatas == null) {
+                return 0;
+            }
             if (mDatas.size() == 1) {
                 return mDatas.size();
             } else if (mDatas.size() < 1) {
@@ -707,6 +716,15 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     public void releaseBanner() {
-        handler.removeCallbacksAndMessages(null);
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
+        if (mDatas != null) {
+            mDatas.clear();
+        }
+        if (indicatorImages != null) {
+            indicatorImages.clear();
+        }
     }
 }

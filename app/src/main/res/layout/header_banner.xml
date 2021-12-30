@@ -8,6 +8,6 @@
     app:indicator_margin="15dp"
     app:indicator_padding="6dp"
     app:indicator_width="6dp"
-    app:is_back_loop="false"
-    app:page_left_margin="30dp"
-    app:page_right_margin="30dp" />
+    app:is_back_loop="false" />
+    <!--    app:page_left_margin="30dp"-->
+    <!--    app:page_right_margin="30dp"-->

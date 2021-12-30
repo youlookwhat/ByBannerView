@@ -60,7 +60,7 @@ public class RecyclerViewBannerActivity extends AppCompatActivity {
         banner2
 //                .setAutoPlay(true)
 //                .setBannerStyle(BannerConfig.NOT_INDICATOR)
-                .setBannerAnimation(ScaleRightTransformer.class)
+//                .setBannerAnimation(ScaleRightTransformer.class)
                 .setOffscreenPageLimit(list.size())
                 .setDelayTime(3000)
                 .setPages(list, new HolderCreator<ByBannerViewHolder>() {

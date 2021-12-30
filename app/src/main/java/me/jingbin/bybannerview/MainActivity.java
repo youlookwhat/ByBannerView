@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onBannerClick(int position) {
                 MainActivity.this.startActivity(new Intent(banner.getContext(), RecyclerViewBannerActivity.class));
-                Toast.makeText(getApplicationContext(), list.get(position).getTitle(), Toast.LENGTH_LONG).show();
             }
         });
         banner.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -260,15 +259,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        //结束轮播
-        banner.stopAutoPlay();
-        banner2.stopAutoPlay();
-        banner3.stopAutoPlay();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         //开始轮播
@@ -278,21 +268,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         //结束轮播
         banner.stopAutoPlay();
         banner2.stopAutoPlay();
         banner3.stopAutoPlay();
-        cancelAllTimers();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        banner.setAutoPlay(false).releaseBanner();
-        banner2.setAutoPlay(false).releaseBanner();
-        banner3.setAutoPlay(false).releaseBanner();
+        banner.releaseBanner();
+        banner2.releaseBanner();
+        banner3.releaseBanner();
         cancelAllTimers();
     }
 }

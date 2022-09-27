@@ -340,6 +340,38 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
         }
     }
 
+    public void setCurrentItem(int item) {
+        if (viewPager != null) {
+            if (isLoop) {
+                // 循环滚动，不是实际的position
+                int position = NUM / 2 - ((NUM / 2) % count) + 1 + item;
+                if (position < count) {
+                    viewPager.setCurrentItem(position);
+                }
+            } else {
+                viewPager.setCurrentItem(item);
+            }
+        }
+    }
+
+    public void setCurrentItem(int item, boolean smoothScroll) {
+        if (viewPager != null) {
+            if (isLoop) {
+                // 循环滚动，不是实际的position
+                int position = NUM / 2 - ((NUM / 2) % count) + 1 + item;
+                if (position < count) {
+                    viewPager.setCurrentItem(position, smoothScroll);
+                }
+            } else {
+                viewPager.setCurrentItem(item, smoothScroll);
+            }
+        }
+    }
+
+    public ViewPager getViewPager() {
+        return viewPager;
+    }
+
     private void createIndicator() {
         indicatorImages.clear();
         indicator.removeAllViews();
@@ -378,22 +410,12 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     private void setData() {
-        if (isBackLoop) {
-            if (isLoop) {
-                currentItem = 0;
-                lastPosition = 0;
-            } else {
-                currentItem = 0;
-                lastPosition = 0;
-            }
+        if (isLoop) {
+            currentItem = NUM / 2 - ((NUM / 2) % count) + 1;
+            lastPosition = 1;
         } else {
-            if (isLoop) {
-                currentItem = NUM / 2 - ((NUM / 2) % count) + 1;
-                lastPosition = 1;
-            } else {
-                currentItem = 0;
-                lastPosition = 0;
-            }
+            currentItem = 0;
+            lastPosition = 0;
         }
         if (adapter == null) {
             adapter = new BannerPagerAdapter();

@@ -8,7 +8,7 @@
 ### 重大更新!!
 > 上个版本1.1.7，如果是左右留边的banner样式，首次进去会有黏在一起的情况，但是没有人反馈，所以我认为这个库基本除了我没人使用，哈哈。如果有人使用看这里就好。
 
-- 1.更改依赖库名：`com.github.youlookwhat:ByBannerView:1.3.1`
+- 1.更改依赖库名：`com.github.youlookwhat:ByBannerView:1.4.0`
 - 2.xml引入更换：`<me.jingbin.banner.ByBannerView/>`
 - 3.混淆修正：`-keep class me.jingbin.banner.** {*;}`
 - 4.如果默认是返回轮播，查看是否添加属性：`app:is_back_loop="true"`
@@ -39,6 +39,7 @@ dependencies {
  - 1.默认滑动到最后一条时，往回轮播
  - 2.可设置右边距的轮播图，也可支持左右都有间距的轮播图
  - 3.支持正常轮播图，并往回轮播或者循环轮播
+ - 4.防止重复点击，点击事件实现：`OnBannerFilterClickListener`
 
 #### 属性解释
 

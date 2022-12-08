@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.cardview.widget.CardView;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import me.jingbin.banner.ByBannerView;
 import me.jingbin.banner.config.OnBannerClickListener;
+import me.jingbin.banner.config.OnBannerFilterClickListener;
 import me.jingbin.banner.config.ScaleRightTransformer;
 import me.jingbin.banner.holder.ByBannerViewHolder;
 import me.jingbin.banner.holder.HolderCreator;
@@ -63,9 +65,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .start();
-        banner.setOnBannerClickListener(new OnBannerClickListener() {
+        banner.setOnBannerClickListener(new OnBannerFilterClickListener() {
             @Override
-            public void onBannerClick(int position) {
+            public void onSingleClick(int position) {
+                // OnBannerFilterClickListener 防止重复点击
                 MainActivity.this.startActivity(new Intent(banner.getContext(), RecyclerViewBannerActivity.class));
             }
         });
@@ -117,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPages(list, new HolderCreator<ByBannerViewHolder>() {
                     @Override
                     public ByBannerViewHolder createViewHolder() {
-                        return new CustomViewHolder2();
+                        return new CustomViewHolder3();
                     }
                 })
                 .start();
@@ -208,6 +211,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View createView(Context context) {
             return LayoutInflater.from(context).inflate(R.layout.item_banner_two, null);
+        }
+
+        @Override
+        public void onBind(Context context, int position, BannerItemBean data) {
+        }
+    }
+
+    static class CustomViewHolder3 implements ByBannerViewHolder<BannerItemBean> {
+
+        @Override
+        public View createView(Context context) {
+            return LayoutInflater.from(context).inflate(R.layout.item_banner_three, null);
         }
 
         @Override

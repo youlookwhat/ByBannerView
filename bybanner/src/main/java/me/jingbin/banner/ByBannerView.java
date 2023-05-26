@@ -64,10 +64,12 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
     private boolean isScroll = BannerConfig.IS_SCROLL;
     // 是否循环播放，false则循环一轮后停止，默认true
     private boolean isLoop = BannerConfig.IS_LOOP;
-    // 滑动到头后，是否返回滑动，默认true，返回滑动！
+    // 滑动到头后，是否返回滑动，默认false。返回滑动时page_left_margin无效
     private boolean isBackLoop = BannerConfig.IS_BACK_LOOP;
     // 指示器的默认宽高
     private final int indicatorSize;
+    // 一屏多页模式是否可点击侧边切换，默认为true
+    private boolean isCanClickSideRoll = true;
     private static final int NUM = 5000;
 
     private int count = 0;
@@ -116,11 +118,8 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
         handleTypedArray(context, attrs);
         View view = LayoutInflater.from(context).inflate(R.layout.layout_bybanner, this, true);
         viewPager = view.findViewById(R.id.bannerViewPager);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        params.leftMargin = mPageLeftMargin;
-        params.rightMargin = mPageRightMargin;
-        viewPager.setLayoutParams(params);
         indicator = view.findViewById(R.id.circleIndicator);
+        setPageLeftRightMargin(mPageLeftMargin, mPageRightMargin);
         RelativeLayout.LayoutParams indicatorParam = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         indicatorParam.bottomMargin = mIndicatorMargin;
         indicatorParam.leftMargin = mIndicatorMarginLeft - mIndicatorPadding;
@@ -147,8 +146,8 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
         isAutoPlay = typedArray.getBoolean(R.styleable.ByBannerView_is_auto_play, BannerConfig.IS_AUTO_PLAY);
         isLoop = typedArray.getBoolean(R.styleable.ByBannerView_is_loop, BannerConfig.IS_LOOP);
         isBackLoop = typedArray.getBoolean(R.styleable.ByBannerView_is_back_loop, BannerConfig.IS_BACK_LOOP);
-        mPageLeftMargin = typedArray.getDimensionPixelSize(R.styleable.ByBannerView_page_left_margin, BannerConfig.PAGE_MARGIN);
-        mPageRightMargin = typedArray.getDimensionPixelSize(R.styleable.ByBannerView_page_right_margin, BannerConfig.PAGE_MARGIN);
+        mPageLeftMargin = typedArray.getDimensionPixelSize(R.styleable.ByBannerView_page_left_margin, 0);
+        mPageRightMargin = typedArray.getDimensionPixelSize(R.styleable.ByBannerView_page_right_margin, 0);
         currentItem = isBackLoop ? 0 : -1;
         typedArray.recycle();
     }
@@ -166,6 +165,16 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     /**
+     * 设置一屏多页时，点击边缘是否可切换
+     */
+    public ByBannerView setCanClickSideRoll(boolean canClickSideRoll) {
+        isCanClickSideRoll = canClickSideRoll;
+        return this;
+    }
+
+    /**
+     * 一屏多页时的右边距
+     *
      * @param pageRightMargin banner距屏幕的右边距
      */
     public ByBannerView setPageRightMargin(int pageRightMargin) {
@@ -175,6 +184,8 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     /**
+     * 一屏多页时的左边距
+     *
      * @param pageLeftMargin banner距屏幕的左边距
      */
     public ByBannerView setPageLeftMargin(int pageLeftMargin) {
@@ -184,16 +195,20 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     /**
+     * 一屏多页时的左右边距
+     *
      * @param pageLeftMargin  banner距屏幕的左边距
      * @param pageRightMargin banner距屏幕的右边距
      */
     public ByBannerView setPageLeftRightMargin(int pageLeftMargin, int pageRightMargin) {
-        this.mPageLeftMargin = pageLeftMargin;
-        this.mPageRightMargin = pageRightMargin;
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        params.leftMargin = mPageLeftMargin;
-        params.rightMargin = mPageRightMargin;
-        viewPager.setLayoutParams(params);
+        if (pageLeftMargin > 0 || pageRightMargin > 0) {
+            this.mPageLeftMargin = pageLeftMargin;
+            this.mPageRightMargin = pageRightMargin;
+            viewPager.setClipChildren(false);
+            viewPager.setClipToPadding(false);
+            viewPager.setOffscreenPageLimit(2);
+            viewPager.setPadding(mPageLeftMargin, 0, mPageRightMargin, 0);
+        }
         return this;
     }
 
@@ -341,30 +356,51 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     public void setCurrentItem(int item) {
-        if (viewPager != null) {
-            if (isLoop && !isBackLoop) {
-                // 循环滚动，不是实际的position
-                int position = NUM / 2 - ((NUM / 2) % count) + 1 + item;
-                if (position < count) {
-                    viewPager.setCurrentItem(position);
-                }
-            } else {
-                viewPager.setCurrentItem(item);
+        if (viewPager == null) return;
+        if (isLoop && !isBackLoop) {
+            // 循环滚动，不是实际的position
+            int position = NUM / 2 - ((NUM / 2) % count) + 1 + item;
+            if (position < count) {
+                viewPager.setCurrentItem(position);
             }
+        } else {
+            viewPager.setCurrentItem(item);
         }
     }
 
     public void setCurrentItem(int item, boolean smoothScroll) {
-        if (viewPager != null) {
-            if (isLoop && !isBackLoop) {
-                // 循环滚动，不是实际的position
-                int position = NUM / 2 - ((NUM / 2) % count) + 1 + item;
-                if (position < count) {
-                    viewPager.setCurrentItem(position, smoothScroll);
-                }
-            } else {
-                viewPager.setCurrentItem(item, smoothScroll);
+        if (viewPager == null) return;
+        if (isLoop && !isBackLoop) {
+            // 循环滚动，不是实际的position
+            int position = NUM / 2 - ((NUM / 2) % count) + 1 + item;
+            if (position < count) {
+                viewPager.setCurrentItem(position, smoothScroll);
             }
+        } else {
+            viewPager.setCurrentItem(item, smoothScroll);
+        }
+    }
+
+    /**
+     * 一屏多页状态时，点击边缘位置，定位到指定position
+     *
+     * @param position 点击的position
+     */
+    private void setClipCurrentItem(int position) {
+        if (viewPager == null || mDatas == null) {
+            return;
+        }
+        int currentItem = getCurrentItem();
+        int realCurrentItem = position;
+        if (!isBackLoop) {
+            realCurrentItem = toRealPosition(position);
+        }
+        if (realCurrentItem > mDatas.size() - 1 || currentItem == realCurrentItem) {
+            return;
+        }
+        viewPager.setCurrentItem(position);
+        if (isLoop && !isBackLoop) {
+            startAutoPlay();
         }
     }
 
@@ -612,6 +648,10 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
                             listener.onBannerClick(toRealPosition(position));
                         }
                     }
+                    if (isClipChildrenMode() && isCanClickSideRoll) {
+                        // 一屏多页且点击的不是当前page，则滚动到对应的page
+                        setClipCurrentItem(position);
+                    }
                 }
             });
 
@@ -714,6 +754,13 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
             }
             lastPosition = position;
         }
+    }
+
+    /**
+     * 是否是一屏多页状态
+     */
+    private boolean isClipChildrenMode() {
+        return (mPageLeftMargin > 0 || mPageRightMargin > 0);
     }
 
     private int toRealPosition(int position) {

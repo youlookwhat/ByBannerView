@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 
 public class BannerViewPager extends ViewPager {
 
+    // 是否能手动滑动
     private boolean scrollable = true;
     private boolean mHandleAttach = true;
 

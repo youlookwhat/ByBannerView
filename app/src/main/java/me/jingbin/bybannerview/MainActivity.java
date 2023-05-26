@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.cardview.widget.CardView;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
@@ -53,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setBannerView(final List<BannerItemBean> list) {
         banner.setPageRightMargin(dip2px(this, 59))
+                .setCanClickSideRoll(true)// 是否点击边缘会滚动，默认是
 //                .setAutoPlay(true)
 //                .setBannerStyle(BannerConfig.NOT_INDICATOR)
                 .setBannerAnimation(ScaleRightTransformer.class)
@@ -69,7 +69,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSingleClick(int position) {
                 // OnBannerFilterClickListener 防止重复点击
-                MainActivity.this.startActivity(new Intent(banner.getContext(), RecyclerViewBannerActivity.class));
+                if (banner.getCurrentItem() == position) {
+                    // 一屏多页时，如果点击的是当前的position则跳转
+                    MainActivity.this.startActivity(new Intent(banner.getContext(), RecyclerViewBannerActivity.class));
+                }
             }
         });
         banner.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

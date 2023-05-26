@@ -39,9 +39,4 @@ public class BannerConfig {
     public static final boolean IS_LOOP = true;
     public static final boolean IS_BACK_LOOP = false;
 
-    /**
-     * margin 左右的间距
-     */
-    public static final int PAGE_MARGIN = 0;
-
 }

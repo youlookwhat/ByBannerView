@@ -342,7 +342,7 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
 
     public void setCurrentItem(int item) {
         if (viewPager != null) {
-            if (isLoop) {
+            if (isLoop && !isBackLoop) {
                 // 循环滚动，不是实际的position
                 int position = NUM / 2 - ((NUM / 2) % count) + 1 + item;
                 if (position < count) {
@@ -356,7 +356,7 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
 
     public void setCurrentItem(int item, boolean smoothScroll) {
         if (viewPager != null) {
-            if (isLoop) {
+            if (isLoop && !isBackLoop) {
                 // 循环滚动，不是实际的position
                 int position = NUM / 2 - ((NUM / 2) % count) + 1 + item;
                 if (position < count) {
@@ -410,7 +410,8 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     private void setData() {
-        if (isLoop) {
+        if (isLoop && !isBackLoop) {
+            // 循环滚动 且 不是返回滚动
             currentItem = NUM / 2 - ((NUM / 2) % count) + 1;
             lastPosition = 1;
         } else {

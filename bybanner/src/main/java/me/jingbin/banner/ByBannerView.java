@@ -360,8 +360,9 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
         if (isLoop && !isBackLoop) {
             // 循环滚动，不是实际的position
             int position = NUM / 2 - ((NUM / 2) % count) + 1 + item;
-            if (position < count) {
+            if (position < NUM) {
                 viewPager.setCurrentItem(position);
+                startAutoPlay();
             }
         } else {
             viewPager.setCurrentItem(item);
@@ -373,8 +374,9 @@ public class ByBannerView extends FrameLayout implements ViewPager.OnPageChangeL
         if (isLoop && !isBackLoop) {
             // 循环滚动，不是实际的position
             int position = NUM / 2 - ((NUM / 2) % count) + 1 + item;
-            if (position < count) {
+            if (position < NUM) {
                 viewPager.setCurrentItem(position, smoothScroll);
+                startAutoPlay();
             }
         } else {
             viewPager.setCurrentItem(item, smoothScroll);
